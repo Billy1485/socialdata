@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<title>D3: Setting paragraphs' style conditionally, based on data</title>
 		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
-		<script type="text/javascript" src="js/viz.js"></script>
+		<script type="text/javascript" src="js/test.js"></script>
 	</head>
 	<body>
 		<script type="text/javascript">
@@ -12,7 +12,7 @@
 			//var dataset = [ 5, 10, 15, 20, 25 ];
 			var dataset;
 
-			d3.csv("data/test.csv", function(error, data) {
+			d3.csv("data/crime_data.csv", function(error, data) {
 
 				if (error) {  //If error is not null, something went wrong.
 				  console.log(error);  //Log the error.
@@ -21,14 +21,14 @@
 
 				  //Include other code to execute after successful file load here
 				 dataset = data;
-				 viz1()
+				 test_viz()
 				}
 			});	
 			
 
 			
 		</script>
-		<div id="viz1"></div>
+		<div id="test-viz"></div>
 		
 	</body>
 </html>
