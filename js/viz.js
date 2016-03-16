@@ -1,7 +1,7 @@
 function viz_1() {	
 //Width and height
-	var w = 1000;
-	var h = 500;
+	var w = 1750;
+	var h = 700;
 	var padding = 100;
 
 	//Create scale functions
@@ -15,7 +15,7 @@ function viz_1() {
 
 	var rScale = d3.scale.linear()
 						 .domain([0, d3.max(dataset, function(d) { return parseFloat(d.total); })])
-						 .range([1, 10]);
+						 .range([1, 20]);
 						
 	var xAxis = d3.svg.axis()
 					  .scale(xScale)
@@ -45,7 +45,8 @@ function viz_1() {
 	   .attr("r", function(d) {
 		   //return 5
 			return rScale(d.total);
-		});
+		})
+		.attr("fill", "teal");;
 
 		svg.selectAll("text")
 		   .data(dataset)
@@ -56,14 +57,14 @@ function viz_1() {
 		   })
 		   .attr("class", "district-label")
 		   .attr("x", function(d) {
-				return xScale(d.prostitution);
+				return xScale(d.prostitution)+17;
 		   })
 		   .attr("y", function(d) {
-				return yScale(d.cartheft);
+				return yScale(d.cartheft)+5;
 		   })
 		   .attr("font-family", "sans-serif")
 		   .attr("font-size", "11px")
-		   .attr("fill", "red");
+		   .attr("fill", "black");
 
 		svg.append("g")
 			.attr("class", "axes")
@@ -74,6 +75,23 @@ function viz_1() {
 			.attr("class", "axes")
 			.attr("transform", "translate(" + padding + ",0)")
 			.call(yAxis);
+		
+		// Add the text label for the x axis
+		svg.append("text")
+			.attr("class", "axis-labels")
+			.attr("transform", "translate(" + (w / 2) + " ," + (h - 50) + ")")
+			.style("text-anchor", "middle")
+			.text("Number of prostitution crimes");
+
+		// Add the text label for the Y axis
+		svg.append("text")
+			.attr("class", "axis-labels")
+			.attr("transform", "rotate(-90)")
+			.attr("y", 0)
+			.attr("x",0 - (h / 2))
+			.attr("dy", "1em")
+			.style("text-anchor", "middle")
+			.text("Number of vehicle theft crimes");
 
 		d3.select("#year2003").on("click", function() {
 			d3.csv("data/2003_crime_data.csv", function(error, data) {
@@ -120,15 +138,15 @@ function viz_1() {
 					   })
 					   .attr("class", "district-label")
 					   .attr("x", function(d) {
-							return xScale(d.prostitution);
+							return (xScale(d.prostitution) + 17);
 					   })
 					   .attr("y", function(d) {
-							return yScale(d.cartheft);
+							return yScale(d.cartheft) + 5;
 					   })
 					   .attr("font-family", "sans-serif")
 					   .attr("font-size", "11px")
-					   .attr("fill", "red")
-				})	
+					   .attr("fill", "Black")
+				})			
 
 			}});
 		})
@@ -179,14 +197,14 @@ function viz_1() {
 						   })
 						   .attr("class", "district-label")
 						   .attr("x", function(d) {
-								return xScale(d.prostitution);
+								return xScale(d.prostitution)+9;
 						   })
 						   .attr("y", function(d) {
-								return yScale(d.cartheft);
+								return yScale(d.cartheft)+12;
 						   })
 						   .attr("font-family", "sans-serif")
 						   .attr("font-size", "11px")
-						   .attr("fill", "red")
+						   .attr("fill", "Black")
 					})	
 	
 			}})
@@ -194,7 +212,7 @@ function viz_1() {
 }
 
 function viz_2() {
-	var margin = {top: 20, right: 20, bottom: 70, left: 40},
+	var margin = {top: 20, right: 120, bottom: 70, left: 100},
 		w = 1200 - margin.left - margin.right,
 		h = 300 - margin.top - margin.bottom;
 	//Create SVG element
@@ -256,6 +274,23 @@ function viz_2() {
 				.attr("class", "axes")
 				.attr("transform", "translate(0," + h + ")")
 				.call(xAxis);
+				
+			// Add the text label for the x axis
+			svg.append("text")
+				.attr("class", "axis-labels")
+				.attr("transform", "translate(" + (w / 2) + " ," + (h + 50) + ")")
+				.style("text-anchor", "middle")
+				.text("Hour of the day");
+
+			// Add the text label for the Y axis
+			/*svg.append("text")
+				.attr("class", "axis-labels")
+				.attr("transform", "rotate(-90)")
+				.attr("y", 0)
+				.attr("x",0 - (h / 2))
+				.attr("dy", "1em")
+				.style("text-anchor", "middle")
+				.text("Number of crimes committed");*/
 			
 			d3.select("#vehicle-theft")
 				.on("click", function() {
