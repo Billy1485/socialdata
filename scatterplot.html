@@ -8,30 +8,26 @@
 		<link rel="stylesheet" type="text/css" href="css/global.css">
 	</head>
 	<body>
-		<script type="text/javascript">
-		
-			//var dataset = [ 5, 10, 15, 20, 25 ];
-			var dataset;
 
-			d3.csv("data/crime_data.csv", function(error, data) {
+		<p class="year-select" id="year2015">2015</p>
+		<p class="year-select" id="year2003">2003</p>
+		<div id="scatter-viz"></div>
+		<div id="book-eg"></div>
+				<script type="text/javascript">
+			//var dataset = [ 5, 10, 15, 20, 25 ];
+			d3.csv("data/2003_crime_data.csv", function(error, data) {
 
 				if (error) {  //If error is not null, something went wrong.
 				  console.log(error);  //Log the error.
 				} else {      //If no error, the file loaded correctly. Yay!
 				  console.log(data);   //Log the data.
-
 				  //Include other code to execute after successful file load here
-				 dataset = data;
-				 scatter_viz()
-				 //book_eg()
-				}
-			});	
-			
+				 dataset = data
+				scatter_viz();
+			}});
+			var dataset;
 
 			
 		</script>
-		<div id="scatter-viz"></div>
-		<div id="book-eg"></div>
-		
 	</body>
 </html>
