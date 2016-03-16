@@ -100,7 +100,8 @@ function scatter_viz() {
 	   .attr("r", function(d) {
 		   //return 5
 			return rScale(d.total);
-		});
+		})
+		.attr("fill", "teal");
 
 		svg.selectAll("text")
 		   .data(dataset)
@@ -111,14 +112,14 @@ function scatter_viz() {
 		   })
 		   .attr("class", "district-label")
 		   .attr("x", function(d) {
-				return xScale(d.prostitution);
+				return xScale(d.prostitution)+17;
 		   })
 		   .attr("y", function(d) {
-				return yScale(d.cartheft);
+				return yScale(d.cartheft)+5;
 		   })
 		   .attr("font-family", "sans-serif")
 		   .attr("font-size", "11px")
-		   .attr("fill", "red");
+		   .attr("fill", "black");
 
 		svg.append("g")
 			.attr("class", "axes")
@@ -139,51 +140,88 @@ function scatter_viz() {
 				  console.log(data);   //Log the data.
 				  //Include other code to execute after successful file load here
 				dataset = data
-				svg.selectAll("circle")
-				.data(dataset)
-				.transition()
-				.delay(function(d, i) {
-					return i / dataset.length * 1000;
-				})
-				.each("start", function() {      // <-- Executes at start of transition
-					svg.selectAll(".district-label")
-					.style("opacity", 1)
+				
+				xScale.domain([0, d3.max(dataset, function(d) { return parseFloat(d.prostitution); })])
+						 //.range([padding, w - padding])
+
+				yScale.domain([0, d3.max(dataset, function(d) { return parseFloat(d.cartheft); })])
+						 //.range([h - padding, padding])
+
+				rScale.domain([0, d3.max(dataset, function(d) { return parseFloat(d.total); })])
+						 //.range([1, 10]);				
+				
+				var circles = svg.selectAll("circle").data(dataset)
+				
+				circles.enter()
+					.append("circle")
+					.attr("cx", function(d) {
+						return xScale(d.prostitution);
+					})
+					.attr("cy", function(d) {
+						return yScale(d.cartheft);
+					})
+					.attr("r", function(d) {
+						return rScale(d.total)
+					})
+				
+				circles.transition()
+					.delay(function(d, i) {
+						return i / dataset.length * 1000;
+					})					
+					.duration(2000)
+					//.ease()
+					.attr("cy", function(d) {
+						return yScale(d.cartheft);
+					})
+					.attr("cx", function(d) {
+						return xScale(d.prostitution);
+					})
+				   .attr("r", function(d) {
+						return rScale(d.total)
+					})
+				
+				circles.exit()
 					.transition()
-					.duration(400)
-					.style("opacity", 0)
 					.remove()
-				})					
-   				.duration(2000)
-				//.ease()
-				.attr("cy", function(d) {
-					return yScale(d.cartheft);
-				})
-				.attr("cx", function(d) {
-					return xScale(d.prostitution);
-				})
-			   .attr("r", function(d) {
-				   //return 5
-					return rScale(d.total);
-				})
-				.each("end", function() {      // <-- Executes at end of transition
-					svg.selectAll(".district-label")
-					   .data(dataset)
-					   .enter()
-					   .append("text")
-					   .text(function(d) {
-							return d.district;
-					   })
-					   .attr("class", "district-label")
-					   .attr("x", function(d) {
-							return xScale(d.prostitution);
-					   })
-					   .attr("y", function(d) {
-							return yScale(d.cartheft);
-					   })
-					   .attr("font-family", "sans-serif")
-					   .attr("font-size", "11px")
-					   .attr("fill", "red")
-				})	
+					
+				var labels = svg.selectAll(".district-label").data(dataset);
+				labels.enter()
+				   .append("text")
+				   .text(function(d) {
+						return d.district;
+				   })
+				   .attr("class", "district-label")
+				   .attr("x", function(d) {
+						return xScale(d.prostitution)+17;
+				   })
+				   .attr("y", function(d) {
+						return yScale(d.cartheft)+5;
+				   })
+				   .attr("font-family", "sans-serif")
+				   .attr("font-size", "11px")
+				   .attr("fill", "teal");
+				
+				labels.transition()
+					.delay(function(d, i) {
+						return i / dataset.length * 1000;
+					})					
+   					.duration(2000)
+					//.ease()
+					.attr("y", function(d) {
+						return yScale(d.cartheft)+5;
+					})
+					.attr("x", function(d) {
+						return xScale(d.prostitution)+17;
+					})
+				   .attr("r", function(d) {
+						return rScale(d.total);
+					})
+					.attr("class", "district-label")
+				
+				labels.exit()
+					//.transition()
+					//.duration(1000)
+					.remove()
 
 			}});
 		})
@@ -198,21 +236,34 @@ function scatter_viz() {
 					console.log(data);   //Log the data.
 					//Include other code to execute after successful file load here
 					dataset = data
-					svg.selectAll("circle")
-					.data(dataset)
-					.transition()
+				xScale.domain([0, d3.max(dataset, function(d) { return parseFloat(d.prostitution); })])
+						 //.range([padding, w - padding])
+
+				yScale.domain([0, d3.max(dataset, function(d) { return parseFloat(d.cartheft); })])
+						 //.range([h - padding, padding])
+
+				rScale.domain([0, d3.max(dataset, function(d) { return parseFloat(d.total); })])
+						 //.range([1, 10]);				
+				
+				var circles = svg.selectAll("circle").data(dataset)
+				
+				circles.enter()
+					.append("circle")
+					.attr("cx", function(d) {
+						return xScale(d.prostitution);
+					})
+					.attr("cy", function(d) {
+						return yScale(d.cartheft);
+					})
+					.attr("r", function(d) {
+						return rScale(d.total)
+					})
+				
+				circles.transition()
 					.delay(function(d, i) {
 						return i / dataset.length * 1000;
-					})
-					.each("start", function() {      // <-- Executes at start of transition
-						svg.selectAll(".district-label")
-						.style("opacity", 1)
-						.transition()
-						.duration(400)
-						.style("opacity", 0)
-						.remove()
 					})					
-   					.duration(2000)
+					.duration(2000)
 					//.ease()
 					.attr("cy", function(d) {
 						return yScale(d.cartheft);
@@ -221,29 +272,52 @@ function scatter_viz() {
 						return xScale(d.prostitution);
 					})
 				   .attr("r", function(d) {
-					   //return 5
+						return rScale(d.total)
+					})
+				
+				circles.exit()
+					.transition()
+					.remove()
+					
+				var labels = svg.selectAll(".district-label").data(dataset);
+				labels.enter()
+				   .append("text")
+				   .text(function(d) {
+						return d.district;
+				   })
+				   .attr("class", "district-label")
+				   .attr("x", function(d) {
+						
+						return xScale(d.prostitution)+12;
+				   })
+				   .attr("y", function(d) {
+						return yScale(d.cartheft)+9;
+				   })
+				   .attr("font-family", "sans-serif")
+				   .attr("font-size", "11px")
+				   .attr("fill", "black")
+				   .attr("class", "district-label");
+				
+				labels.transition()
+					.delay(function(d, i) {
+						return i / dataset.length * 1000;
+					})					
+   					.duration(2000)
+					//.ease()
+					.attr("y", function(d) {
+						return yScale(d.cartheft)+12;
+					})
+					.attr("x", function(d) {
+						return xScale(d.prostitution)+9;
+					})
+				   .attr("r", function(d) {
 						return rScale(d.total);
 					})
-					.each("end", function() {      // <-- Executes at end of transition
-						svg.selectAll(".district-label")
-						   .data(dataset)
-						   .enter()
-						   .append("text")
-						   .text(function(d) {
-								return d.district;
-						   })
-						   .attr("class", "district-label")
-						   .attr("x", function(d) {
-								return xScale(d.prostitution);
-						   })
-						   .attr("y", function(d) {
-								return yScale(d.cartheft);
-						   })
-						   .attr("font-family", "sans-serif")
-						   .attr("font-size", "11px")
-						   .attr("fill", "red")
-					})	
-	
+				
+				labels.exit()
+					//.transition()
+					//.duration(1000)
+					.remove()
 			}})
 		})
 }
