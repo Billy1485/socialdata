@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Assignment 2 - Social data analysis and visualization</title>
+		<meta name="description" content="Assignment 2 of social data visualization course at DTU">
+		<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+		<script type="text/javascript" src="js/ass2.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/ass2.css">
+	</head>
+	<body>
+		<!-- Check browser version and display message to upgrade -->
+		<script>
+			var $buoop = {
+							text: "This page contains data visualizations that will only work using up to date browsers. Click here to update."
+							c:2}; 
+			function $buo_f(){ 
+			 var e = document.createElement("script"); 
+			 e.src = "//browser-update.org/update.min.js"; 
+			 document.body.appendChild(e);
+			};
+			try {document.addEventListener("DOMContentLoaded", $buo_f,false)}
+			catch(e){window.attachEvent("onload", $buo_f)} 
+		</script>
+		<h1>Welcome to my Assignment 2 of Social Data Analysis and Visualization</h1>
+		<p>Below you will find my answers to each of the assignment 2 questions. Where necessary I have linked to the python notebook in HTML
+		format. For the sake of keeping the page tidy much of my D3 js can be found in the external file  <a href="js/ass2.js">here</a>
+		<div class="section" id="2a">
+			<h2>2A: Simple SVG stuff</h2>
+			<div class="task">
+				<h3>The Task...</h3>
+				<p>Create your own version of example 5-14 with the following tweaks.Add some SVG graphics below the D3. 
+				Create an new version of the 5 SVG squares in example 3-22. Make the following modifications</p>
+				<ul>
+					<li> Add a gray boundary of width 2.</li>
+					<li> Make the squares increasingly transparant from left to right.</li>
+					<li> Make the squares 80 by 80 instead of 30 by 30.</li>
+					<li> Make the squares go from bottom of the SVG element to the top instead of the other way around.</li>
+				</ul>
+			</div>
+			<div class="result">
+				<h3>The Result...</h3>
+				<p>First below I have the text counting in multiples of 5 where any greater than 15 are displayed in red</p>
+				<!-- div for d3 js below to display text-->
+				<div id="count"></div>
+				<script type="text/javascript">
+					//assignment 2a js
+					var dataset = [ 5, 10, 15, 20, 25 ];
+					//select all p elements with the id "count"
+					d3.select("#count").selectAll("p")
+						.data(dataset)
+						.enter()
+						.append("p")
+						.text(function(d) {
+							return "I can count up to " + d;
+						})
+						.style("color", function(d) {
+							if (d > 15) {	//Threshold of 15
+								return "red";
+							} else {
+								return "black";
+							}
+						});
+				</script>
+				<p>Below are the squares with a thicker gray boundary, with larger squares and the squares going from bottom to top</p>
+				<!-- Draw SVG squares and style the boxes using HTML attributes-->
+				<svg width="280" height="140">
+					<rect x="0" y="60" width="80" height="80" fill="purple" opacity="1" stroke="gray" stroke-width="2"/> 
+					<rect x="50" y="45" width="80" height="80" fill="blue" opacity="0.8" stroke="gray" stroke-width="2"/>
+					<rect x="100" y="30" width="80" height="80" fill="green" opacity="0.6" stroke="gray" stroke-width="2"/>
+					<rect x="150" y="15" width="80" height="80" fill="yellow" opacity="0.4" stroke="gray" stroke-width="2"/>
+					<rect x="200" y="0" width="80" height="80" fill="red" opacity="0.2" stroke="gray" stroke-width="2"/>
+				</svg>
+			</div>
+		</div>
+		<div class="section" id="2b">
+			<h2>2B: One scatter plot and two datasets</h2>
+			<h3>The Task</h3>
+			<p>This scatter plot visualization should pull data from an associated CSV/JSON file 
+				(it's easiest to use Python to generate a nicely formatted file that contains only the data you need for the visualization). 
+				You should use appropriate dynamic scales (see chapter 7 of IDV). Additional requirements for the visualizations are listed below</p>
+			<ul>
+				<li>Each point should correspond to a district</li>
+				<li>Points should be labeled</li>
+				<li>The radius of a point should be proportional to total number of crimes in that district</li>
+				<li>The xx-axis should correspond to total number of PROSTITUTION incidents</li>
+				<li>The yy-axis should correspond to total number of VEHICLE THEFT incidents</li>
+				<li>Click on something (your choice) to toggle between data from 2003 and 2015 - there must be a smooth transition.</li>
+				<li>Axes should not change but fit data from both years.</li>
+				<li>Explain in your own words why you think I want the axes to be the same for both years? 
+				(Even though you know how to make axes adapt to the data values.)</li>
+			</ul>
+			<h3>The Result</h3>
+			<script type="text/javascript">
+				var dataset;
+				//Load the 2003 SF crime data as the default display year
+				d3.csv("data/2003_crime.csv", function(error, data) {
+
+					if (error) {  //If error is not null, something went wrong.
+					  console.log(error);  //Log the error.
+					} else {      //If no error, the file loaded correctly. Yay!
+					  //console.log(data);   //Log the data for testing.
+					//set the data
+					dataset = data
+					//call the method from js file to display graph
+					viz_1();
+				}});
+			</script>			
+			<p></p>
+			<h4>Click on the year buttons below to see how prostitution and car theft crimes have changed over the last 12 years and <strong>hover over 
+			each point to see the district labeled and the exact crime numbers</strong></h4>
+			<p>The scatter plot shows the total number of prostitution and vehicle theft 
+			crimes in each district of San Francisco in 2003 and 2015 in relation to total crime</p>
+			<p>The Y axis represents car theft, the x axis represents prostitution numbers and the point radius represents total crime in the district</p>
+
+			<div class="graph">
+				<button class="button" id="year2015">2015</button>
+				<button class="button" id="year2003">2003</button>
+				<div id="viz1-plot">
+					<div id="tooltip" class="hidden">
+						<p id="district"></p>
+						<p id="prostitution"></p>
+						<p id="vehicle"></p>
+						<p id="total"></p>
+					</div>
+				</div>
+
+			</div>
+			<h4>Explain in your own words why you think I want the axes to be the same for both years?</h4>
+			<p>The axes are kept on the same scale so that is possible to make an easy comparison between the crime numbers for each year. As you
+			can see from the graph, vehicle and prostitution crime have reduced over the past 12 years. But the radius of the points does not change, 
+			which means that crime numbers overall have not reduced.
+			</p>
+		</div>
+		<div class="section" id="2c">
+			<h2>2C: One barchart and (at least) two datasets</h2>
+			<h3>The Task</h3>
+			<p>This barchart visualization should also pull data from an associated CSV/JSON file. 
+			Here, Once again, you should use appropriate dynamic scales (see chapter 7 of IDV). 
+			Additional requirements for the visualizations are listed below</p>
+			<ul>
+				<li>This visualization consists of one histogram, which is able to switch between at least two datasets. You get to choose something interesting from Week 3.</li>
+				<li>Click on something to toggle between the two (or more) datasets.</li>
+				<li>Feel free to color and label according to your own taste.</li>
+			</ul>
+			<h3>The Result</h3>
+			<script type="text/javascript">
+				d3.csv("data/PROSTITUTION_crime_data.csv", function(error, data) {
+
+					if (error) {  //If error is not null, something went wrong.
+					  console.log(error);  //Log the error.
+					} else {      //If no error, the file loaded correctly. Yay!
+					  //console.log(data);   //Log the data.
+					  //Include other code to execute after successful file load here
+					 dataset = data
+					viz_2();
+				}});
+			</script>			
+			<div class="visualization" id="viz2">
+				<h4>A histogram showing the risk of prostitution or vehicle theft crime happening during each hour of the day</h4>
+				<p>The Y axis represents the number of crimes and the x axis shows the time of day</p>
+				<p>Click on the buttons to toggle between each crime</p>
+				<div class="graph">
+					<button class="button" id="prostitution1">Prostitution</button>
+					<button class="button" id="vehicle-theft">Vehicle theft</button>
+					<div id="viz2-plot"></div>
+				</div>
+			</div>
+		</div>
+		<div class="section" id="2d">
+			<h2>2D: Visualizing geodata</h2>
+			<h3>The Task</h3>
+			<p></p>
+			<ul>
+				<li>We try our luck with an geospatial visualization displaying results for K=2,…,6K=2,…,6. 
+				The overall idea is each value of KK has an associated view (you should be able to toggle between these) where each of the 
+				KK centroids is shown as a large colored dot (you choose the color scheme), and all GPS points belonging to that centroid are colored 
+				using a related RGB value.</li>
+				<li>Also please add a link to your IPython notebook containing only the solution to the KK-means exercise from week 5 
+				so we can check it out, if necessary.</li>
+			</ul>
+			<h3>The Result</h3>
+			<p>Below is a map of San Francisco. The points on the map represent where prostitution crimes have happened.
+			Each of the colours represents the crime groupings using the kmeans algorithm. The white bordered circle is the centroid.
+			Click the butttons below to change the number of groups(k)</p>
+			<p>For more information on how I calculated the kmeans groups my <a href="notebooks/KmeansCSV.html" target="_blank">python notebook can be found by clicking here</a></p>
+		<button class="button" id="k2">Click for k=2</button>
+		<button class="button" id="k3">Click for k=3</button>
+		<button class="button" id="k4">Click for k=4</button>
+		<button class="button" id="k5">Click for k=5</button>
+		<button class="button" id="k6">Click for k=6</button>
+		<div id="viz3"></div>
+		<script type="text/javascript">
+			colour_array = ["orange", "blue", "red", "grey", "yellow", "purple"]
+			//Width and height
+			var w = 600;
+			var h = 600;
+			//Define map projection
+			var projection = d3.geo.mercator().scale(1).translate([0, 0]).precision(0);
+
+			//Define path generator
+			var path = d3.geo.path()
+							 .projection(projection);
+			//Create SVG element
+			var svg = d3.select("#viz3")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+			
+			//Load in GeoJSON data
+					d3.json("./data/sfpddistricts.json", function(json) {
+						var bounds = path.bounds(json);
+
+						xScale = w / Math.abs(bounds[1][0] - bounds[0][0]);
+						yScale = h / Math.abs(bounds[1][1] - bounds[0][1]);
+						scale = xScale < yScale ? xScale : yScale;
+
+						var transl = [(w - scale * (bounds[1][0] + bounds[0][0])) / 2, (h - scale * (bounds[1][1] + bounds[0][1])) / 2];
+						projection.scale(scale).translate(transl);
+						//Bind data and create one path per GeoJSON feature
+						svg.selectAll("path")
+						   .data(json.features)
+						   .enter()
+						   .append("path")
+						   .attr("d", path)
+						   .style("fill", "teal");
+						
+						svg.selectAll("text")
+						.data(json.features)
+						.enter()
+						.append("svg:text")
+						.text(function(d){
+							console.log(d.properties.DISTRICT)
+							return d.properties.DISTRICT;
+						})
+						.attr("x", function(d){
+							return path.centroid(d)[0];
+						})
+						.attr("y", function(d){
+							return  path.centroid(d)[1];
+						})
+						.attr("text-anchor","middle")
+						.attr('font-size','6pt')
+						.attr('font-weight', 'bold')
+						.attr('color', 'white');
+						
+						//text label for the title	
+						svg.append("text")
+							.attr("id", "title-2D")
+							.attr("x", 300)             
+							.attr("y", 40)
+							.attr("text-anchor", "middle")  
+							.style("font-size", "22px") 
+							.style("font-weight", "bold")  
+							.text("District map of San Francisco");
+				
+					});
+					
+					d3.select("#k2").on("click", function() {
+						d3.csv("./data/k2.csv", function(data) {
+							map_viz(data, "k2")
+						});					
+					})
+					d3.select("#k3").on("click", function() {
+						d3.csv("./data/k3.csv", function(data) {
+							map_viz(data, "k3")
+						});					
+					})
+					d3.select("#k4").on("click", function() {
+						d3.csv("./data/k4.csv", function(data) {
+							map_viz(data, "k4")
+						});					
+					})
+					d3.select("#k5").on("click", function() {
+						d3.csv("./data/k5.csv", function(data) {
+							map_viz(data, "k5")
+						});					
+					})
+					d3.select("#k6").on("click", function() {
+						d3.csv("./data/k6.csv", function(data) {
+							map_viz(data, "k6")
+						});					
+					})					
+					//Load in kmeans 2 data
+
+			
+		</script>			
+		</div>
+	</body>
+</html>
