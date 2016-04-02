@@ -533,6 +533,7 @@ function viz_2() {
 					})
 }
 
+//Display kmeans points on map for assigment 2D
 function map_viz(data, k)
 {				
 	var circles = svg.selectAll("circle").data(data)
